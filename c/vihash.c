@@ -264,7 +264,7 @@ int main(int argc, char **argv)
     int i;
 
     /* Initialize the arguments for the hash function */
-    hash_algorithm = sha1;
+    hash_algorithm = sha256;
     hash_val = NULL;
     hash_len = 0;
 

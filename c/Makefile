@@ -2,7 +2,8 @@
 # Title : ViHash Makefile
 
 EXE = vihash
-FLAGS = -ansi -pedantic -Wall -O3
+#FLAGS = -ansi -pedantic -Wall -O3
+FLAGS = -ansi -O3
 LIBS = -lssl -lcrypto
 
 all:
