@@ -3,7 +3,7 @@ This is a semi-custom hash visualization algorithm similar to ssh-keygen's algor
 
 Current Implementations:
  - Python 3
+ - C
 
 Planned Implementations:
- - C
  - Java
