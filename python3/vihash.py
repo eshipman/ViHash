@@ -103,11 +103,21 @@ def generate(data):
 def vihash(algo, data):
     generate(hash(algo, data))
 
-print("Visualizing the hash of 'Test String #1'")
-vihash('sha256', b'Test String #1')
+# Print the bytes in a fingerprint-like fashion
+def print_pretty(data):
+    for i in range(len(data)):
+        print(hex(data[i]).split('x')[-1], end="")
+        if i < len(data) - 1:
+            print(":", end="")
+    print()
 
-print("\nVisualizing the hash of 'Test String #2'")
-vihash('sha256', b'Test String #2')
 
-print("\nVisualizing the hash of 'Test String #3'")
-vihash('sha256', b'Test String #3')
+hash_algo = 'sha256'
+
+while True:
+    print()
+    text = input("Input something: ")
+
+    data = hash(hash_algo, text.encode())
+    print_pretty(data)
+    vihash(hash_algo, text.encode())
