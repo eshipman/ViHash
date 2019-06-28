@@ -2,13 +2,15 @@
 # Author: Evan Shipman
 # Title : ViHash
 # Descr.: A custom hash visualization algorithm similar to the one used by
-#         ssh-keygen
+#         ssh-keygen. This version supports colored output, using ANSI escape
+#         codes to handle colored output.
 # Vers. : 1.0
 
 import hashlib
 
 SUPPORTED_ALGORITHMS = {'md5', 'sha1', 'sha256', 'sha512', 'sha3 256', 'sha3 512'}
 ALPHABET = [' ', '.', '0', '+', '^', 'E', 'R', 'I']
+COLORS = ['\033[48:5:0m', '\033[48:5:196m', '\033[48:5:202m', '\033[48:5:220m', '\033[48:5:10m', '\033[48:5:12m', '\033[48:5:4m', '\033[48:5:5m']
 
 COLS = 16
 ROWS = 8
@@ -54,8 +56,11 @@ def nibble_to_coords(nibble, x, y):
     
     return (new_x % ROWS), (new_y % COLS), increment
 
-# Generate the 2D visualization
-def generate(data):
+# Generate the 2D visualization according to different modes:
+# Mode 0 - Just symbols
+# Mode 1 - Colored symbols
+# Mode 2 - Just colors
+def generate(data, mode = 0):
     # Allocate the board and get the initial x and y
     board = [[0 for i in range(COLS)] for j in range(ROWS)]
     x = data[0] >> 4
@@ -90,7 +95,14 @@ def generate(data):
     for i in range(ROWS):
         print("|", end="")
         for j in range(COLS):
-            print(ALPHABET[board[i][j] % len(ALPHABET)], end="")
+            if (mode > 0):
+                print(COLORS[board[i][j] % len(ALPHABET)], end="")
+            if (mode == 2):
+                print(" ", end="")
+            if (mode < 2):
+                print(ALPHABET[board[i][j] % len(ALPHABET)], end="")
+            if (mode > 0):
+                print(COLORS[0], end="")
         print("|")
     
     if (COLS == 16):
@@ -100,8 +112,8 @@ def generate(data):
 
 # Piece it all together, hash the data with the specified algorithm and print
 # the visualization to the screen
-def vihash(algo, data):
-    generate(hash(algo, data))
+def vihash(algo, data, mode):
+    generate(hash(algo, data), mode)
 
 # Print the bytes in a fingerprint-like fashion
 def print_pretty(data):
@@ -111,7 +123,6 @@ def print_pretty(data):
             print(":", end="")
     print()
 
-
 hash_algo = 'sha256'
 
 while True:
@@ -119,5 +130,11 @@ while True:
     text = input("Input something: ")
 
     data = hash(hash_algo, text.encode())
+    print("Fingerprint: ", end="")
     print_pretty(data)
-    vihash(hash_algo, text.encode())
+
+    print("Mode 0:")
+    vihash(hash_algo, text.encode(), 0)
+
+    print("Mode 2:")
+    vihash(hash_algo, text.encode(), 2)
